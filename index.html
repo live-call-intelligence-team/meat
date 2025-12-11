@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Org Meat Delivery Platform Architecture</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1f3a;
+            --secondary: #2d3561;
+            --accent: #00f5ff;
+            --accent2: #ff6b6b;
+            --success: #51cf66;
+            --warning: #ffd43b;
+            --danger: #ff6b6b;
+            --bg: #0d1117;
+            --card: #1c2128;
+            --text: #f0f6fc;
+            --text-muted: #8b949e;
+            --purple: #a78bfa;
+            --pink: #f472b6;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--bg) 0%, #161b22 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1f3a 0%, #2d3561 50%, #1a1f3a 100%);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 107, 0.1) 0%, transparent 50%);
+        }
+
+        h1 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #00f5ff 0%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 245, 255, 0.1);
+            border: 2px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 0.5rem;
+            font-family: 'Clash Display', sans-serif;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin: 3rem 0;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .nav-tab {
+            background: var(--card);
+            border: 2px solid transparent;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .nav-tab:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+            padding: 3rem 0;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .arch-container {
+            background: linear-gradient(135deg, rgba(28, 33, 40, 0.9) 0%, rgba(45, 53, 97, 0.3) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 3rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arch-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .arch-title {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .diagram {
+            font-family: 'Space Mono', monospace;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            margin: 2rem 0;
+        }
+
+        .diagram pre {
+            color: var(--accent);
+            font-size: 0.85rem;
+            line-height: 1.8;
+            white-space: pre;
+        }
+
+        .flow-box {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            border: 2px solid var(--accent);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 0.5rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .option-card {
+            background: linear-gradient(135deg, rgba(28, 33, 40, 0.9) 0%, rgba(45, 53, 97, 0.3) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 245, 255, 0.3);
+            border-color: var(--pink);
+        }
+
+        .option-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .option-badge {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+            color: #000;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .option-card h3 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .cost-display {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--success);
+            margin: 1.5rem 0;
+            font-family: 'Clash Display', sans-serif;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .feature-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-list li::before {
+            content: '▸';
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .pros,
+        .cons {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .pros {
+            border-left: 4px solid var(--success);
+        }
+
+        .cons {
+            border-left: 4px solid var(--danger);
+        }
+
+        .pros h4,
+        .cons h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-family: 'Clash Display', sans-serif;
+        }
+
+        .pros h4 {
+            color: var(--success);
+        }
+
+        .cons h4 {
+            color: var(--danger);
+        }
+
+        .pros ul,
+        .cons ul {
+            list-style: none;
+        }
+
+        .pros ul li,
+        .cons ul li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .pros ul li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .cons ul li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .cost-table thead {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        }
+
+        .cost-table th {
+            padding: 1.5rem;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .cost-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cost-table tbody tr:hover {
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        .highlight-row {
+            background: rgba(0, 245, 255, 0.15) !important;
+            font-weight: 700;
+        }
+
+        .best-value {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, rgba(28, 33, 40, 0.9) 0%, rgba(45, 53, 97, 0.3) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .team-card:hover {
+            transform: scale(1.05);
+            border-color: var(--purple);
+            box-shadow: 0 15px 35px rgba(167, 139, 250, 0.3);
+        }
+
+        .team-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .team-title {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .team-count {
+            font-size: 1.2rem;
+            color: var(--pink);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+            margin: 3rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent) 0%, var(--purple) 100%);
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+            margin-right: 3rem;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: auto;
+            margin-left: 3rem;
+        }
+
+        .timeline-content {
+            background: linear-gradient(135deg, rgba(28, 33, 40, 0.9) 0%, rgba(45, 53, 97, 0.3) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 45%;
+            position: relative;
+        }
+
+        .timeline-badge {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            border: 4px solid var(--bg);
+            color: #000;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, var(--success) 0%, #2f9e44 100%);
+            border: 3px solid var(--success);
+            border-radius: 16px;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recommendation::before {
+            content: '★';
+            position: absolute;
+            font-size: 20rem;
+            color: rgba(255, 255, 255, 0.05);
+            top: -5rem;
+            right: -5rem;
+        }
+
+        .recommendation h2 {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .recommendation p {
+            font-size: 1.3rem;
+            margin: 1rem 0;
+            color: #000;
+        }
+
+        .app-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .app-card {
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+            border: 3px solid var(--accent);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .app-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0, 245, 255, 0.4);
+            border-color: var(--purple);
+        }
+
+        .app-card:hover::before {
+            opacity: 0.15;
+        }
+
+        .app-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 10px 20px rgba(0, 245, 255, 0.3));
+        }
+
+        .app-name {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .app-description {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .comparison-grid,
+            .app-showcase {
+                grid-template-columns: 1fr;
+            }
+
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 80px !important;
+            }
+
+            .timeline-badge {
+                left: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>🥩 Multi-Org Meat Delivery Platform</h1>
+            <p class="subtitle">Enterprise Architecture Strategy & Cost Analysis</p>
+
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Timeline</div>
+                    <div class="stat-value">16-20 Weeks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Team Size</div>
+                    <div class="stat-value">7-8 Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Markets</div>
+                    <div class="stat-value">USA + India</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Year 1 Cost</div>
+                    <div class="stat-value">$3.2K</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('overview')">Overview</button>
+            <button class="nav-tab" onclick="showSection('applications')">Mobile Apps</button>
+            <button class="nav-tab" onclick="showSection('cloud-run')">Cloud Run</button>
+            <button class="nav-tab" onclick="showSection('eks')">AWS EKS</button>
+            <button class="nav-tab" onclick="showSection('lambda')">AWS Lambda</button>
+            <button class="nav-tab" onclick="showSection('comparison')">Comparison</button>
+            <button class="nav-tab" onclick="showSection('costs')">Costs</button>
+            <button class="nav-tab" onclick="showSection('team')">Team</button>
+            <button class="nav-tab" onclick="showSection('recommendation')">Recommendation</button>
+        </nav>
+
+        <!-- Overview Section -->
+        <section id="overview" class="section active">
+            <div class="arch-container">
+                <h2 class="arch-title">Project Overview</h2>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin: 3rem 0;">
+                    <div>
+                        <h3
+                            style="color: var(--accent); margin-bottom: 1rem; font-family: 'Clash Display', sans-serif;">
+                            🎯 Scope</h3>
+                        <ul class="feature-list">
+                            <li>Multi-tenant delivery platform</li>
+                            <li>Two Flutter mobile applications (90% code reuse)</li>
+                            <li>Multi-currency payments (Stripe + Razorpay)</li>
+                            <li>Real-time GPS tracking</li>
+                            <li>Neo4j Aura + GDS route optimization</li>
+                            <li>99.95% uptime SLA</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3
+                            style="color: var(--accent); margin-bottom: 1rem; font-family: 'Clash Display', sans-serif;">
+                            💡 Key Features</h3>
+                        <ul class="feature-list">
+                            <li>PostgreSQL RLS data isolation</li>
+                            <li>Intelligent route optimization</li>
+                            <li>Real-time agent assignment</li>
+                            <li>Advanced analytics dashboard</li>
+                            <li>Automated CI/CD pipelines</li>
+                            <li>Multi-region deployment</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3
+                    style="color: var(--accent); margin: 3rem 0 2rem; font-family: 'Clash Display', sans-serif; font-size: 2rem;">
+                    Technology Stack</h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div
+                        style="background: rgba(0, 245, 255, 0.15); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--accent);">
+                        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.5rem;">📱 Mobile</div>
+                        <div>Flutter (iOS + Android)</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">2 Apps, 90%
+                            shared code</div>
+                    </div>
+                    <div
+                        style="background: rgba(81, 207, 102, 0.15); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--success);">
+                        <div style="font-weight: 700; color: var(--success); margin-bottom: 0.5rem;">🔧 Backend</div>
+                        <div>FastAPI (Python)</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">High-performance
+                            async</div>
+                    </div>
+                    <div
+                        style="background: rgba(167, 139, 250, 0.15); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--purple);">
+                        <div style="font-weight: 700; color: var(--purple); margin-bottom: 0.5rem;">🗄️ Database</div>
+                        <div>PostgreSQL Neon</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Serverless, RLS
+                            enabled</div>
+                    </div>
+                    <div
+                        style="background: rgba(255, 212, 59, 0.15); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--warning);">
+                        <div style="font-weight: 700; color: var(--warning); margin-bottom: 0.5rem;">🗺️ Routing</div>
+                        <div>Neo4j Aura + GDS</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">$95/mo graph
+                            analytics</div>
+                    </div>
+                    <div
+                        style="background: rgba(255, 107, 107, 0.15); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--danger);">
+                        <div style="font-weight: 700; color: var(--danger); margin-bottom: 0.5rem;">💳 Payments</div>
+                        <div>Stripe + Razorpay</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Multi-currency
+                            support</div>
+                    </div>
+                    <div
+                        style="background: rgba(244, 114, 182, 0.15); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--pink);">
+                        <div style="font-weight: 700; color: var(--pink); margin-bottom: 0.5rem;">📦 Cache</div>
+                        <div>Redis Upstash</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Serverless
+                            caching</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mobile Applications Section -->
+        <section id="applications" class="section">
+            <div class="arch-container">
+                <h2 class="arch-title">Mobile Applications (Flutter)</h2>
+
+                <div
+                    style="padding: 2rem; background: rgba(0, 245, 255, 0.1); border-radius: 12px; border-left: 4px solid var(--accent); margin-bottom: 3rem;">
+                    <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.5rem;">📱 Single Codebase, Two
+                        Powerful Apps</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        We're building <strong>two distinct mobile applications</strong> using Flutter's cross-platform
+                        capabilities.
+                        With <strong>90% code reuse</strong> between the apps, we achieve maximum efficiency while
+                        delivering
+                        tailored experiences for customers and delivery agents.
+                    </p>
+                </div>
+
+                <div
+                    style="padding: 2.5rem; background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, rgba(244, 114, 182, 0.15) 100%); border-radius: 16px; border: 3px solid var(--purple); margin-bottom: 3rem;">
+                    <h3
+                        style="color: var(--purple); margin-bottom: 1.5rem; font-size: 1.8rem; font-family: 'Clash Display', sans-serif;">
+                        🌍 Multi-Market UI/UX Design</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                        <div
+                            style="background: rgba(0, 0, 0, 0.3); padding: 2rem; border-radius: 12px; border-left: 4px solid var(--accent);">
+                            <h4 style="color: var(--accent); font-size: 1.3rem; margin-bottom: 1rem;">🇺🇸 USA Market
+                                Design</h4>
+                            <ul class="feature-list">
+                                <li>USD currency & Stripe payments</li>
+                                <li>Imperial units (lbs, oz)</li>
+                                <li>USDA meat grade standards</li>
+                                <li>English language interface</li>
+                                <li>US-specific meat cuts & terminology</li>
+                            </ul>
+                        </div>
+                        <div
+                            style="background: rgba(0, 0, 0, 0.3); padding: 2rem; border-radius: 12px; border-left: 4px solid var(--pink);">
+                            <h4 style="color: var(--pink); font-size: 1.3rem; margin-bottom: 1rem;">🇮🇳 India Market
+                                Design</h4>
+                            <ul class="feature-list">
+                                <li>INR currency & Razorpay payments</li>
+                                <li>Metric units (kg, g)</li>
+                                <li>Halal/Jhatka certification filters</li>
+                                <li>Multi-language support (Hindi, etc.)</li>
+                                <li>India-specific cuts & regional preferences</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div
+                        style="margin-top: 2rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px; text-align: center;">
+                        <strong style="color: var(--purple);">🎨 Designing localized experiences for both markets within
+                            the same codebase using feature flags and locale-based configurations</strong>
+                    </div>
+                </div>
+
+                <div class="app-showcase">
+                    <div class="app-card">
+                        <div class="app-icon">👥</div>
+                        <div class="app-name">Customer App</div>
+                        <p class="app-description">Full-featured e-commerce experience for browsing products, placing
+                            orders, and tracking deliveries in real-time</p>
+
+                        <div style="text-align: left; margin-top: 2rem;">
+                            <h4 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.2rem;">Key Features:</h4>
+                            <ul class="feature-list">
+                                <li>Product catalog & search</li>
+                                <li>Multi-org vendor selection</li>
+                                <li>Shopping cart & checkout</li>
+                                <li>Payment integration (Stripe/Razorpay)</li>
+                                <li>Order history & tracking</li>
+                                <li>Real-time delivery updates</li>
+                                <li>Push notifications</li>
+                                <li>User profile & preferences</li>
+                            </ul>
+                        </div>
+
+                        <div
+                            style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 8px;">
+                            <div style="color: var(--accent); font-weight: 700; margin-bottom: 0.5rem;">Platforms</div>
+                            <div style="font-size: 1.5rem;">📱 iOS + Android</div>
+                        </div>
+                    </div>
+
+                    <div class="app-card">
+                        <div class="app-icon">🚚</div>
+                        <div class="app-name">Delivery Agent App</div>
+                        <p class="app-description">Optimized interface for delivery personnel to manage pickups,
+                            deliveries, and route navigation efficiently</p>
+
+                        <div style="text-align: left; margin-top: 2rem;">
+                            <h4 style="color: var(--purple); margin-bottom: 1rem; font-size: 1.2rem;">Key Features:</h4>
+                            <ul class="feature-list">
+                                <li>Real-time order assignments</li>
+                                <li>Optimized route planning</li>
+                                <li>GPS navigation integration</li>
+                                <li>Pickup & delivery confirmation</li>
+                                <li>Customer communication</li>
+                                <li>Earnings tracker</li>
+                                <li>Offline capability</li>
+                                <li>Performance analytics</li>
+                            </ul>
+                        </div>
+
+                        <div
+                            style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 8px;">
+                            <div style="color: var(--purple); font-weight: 700; margin-bottom: 0.5rem;">Platforms</div>
+                            <div style="font-size: 1.5rem;">📱 iOS + Android</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; padding: 2.5rem; background: linear-gradient(135deg, rgba(81, 207, 102, 0.15) 0%, rgba(47, 158, 68, 0.1) 100%); border-radius: 16px; border: 2px solid var(--success);">
+                    <h3
+                        style="color: var(--success); font-family: 'Clash Display', sans-serif; font-size: 2rem; margin-bottom: 1.5rem;">
+                        🎯 Code Reuse Strategy</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                        <div>
+                            <div
+                                style="font-size: 3rem; font-weight: 700; color: var(--success); margin-bottom: 0.5rem;">
+                                90%</div>
+                            <div style="font-weight: 700; margin-bottom: 0.5rem;">Shared Components</div>
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">API clients, models, utilities,
+                                auth</div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 3rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem;">
+                                10%</div>
+                            <div style="font-weight: 700; margin-bottom: 0.5rem;">App-Specific UI</div>
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">Custom flows, screens, features
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 3rem; font-weight: 700; color: var(--purple); margin-bottom: 0.5rem;">
+                                1</div>
+                            <div style="font-weight: 700; margin-bottom: 0.5rem;">Codebase</div>
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">Monorepo with flavors/targets
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size: 3rem; font-weight: 700; color: var(--pink); margin-bottom: 0.5rem;">4
+                            </div>
+                            <div style="font-weight: 700; margin-bottom: 0.5rem;">Build Targets</div>
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">Customer/Agent × iOS/Android</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cloud Run Section -->
+        <section id="cloud-run" class="section">
+            <div class="arch-container">
+                <h2 class="arch-title">Option 1: Google Cloud Run</h2>
+                <span class="option-badge" style="background: var(--success);">RECOMMENDED</span>
+
+                <div class="diagram">
+                    <pre>
+    ┌────────────────────────────────────────────────────────┐
+    │  Cloud Run Load Balancing Alternative:                │
+    │  API Gateway + Cloud CDN (Modern, Cost-Efficient)      │
+    └────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│                     USERS (USA + INDIA)                          │
+│         Mobile Apps (Customer + Delivery Agent) + Dashboard      │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────┐
+│              API GATEWAY (Global Entry Point)                    │
+│   - Global Routing & Traffic Management                          │
+│   - JWT Authorization & API Key Validation                       │
+│   - Rate Limiting & Throttling (per user/org)                   │
+│   - Request/Response Transformation                              │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                   CLOUD CDN (Edge Layer)                         │
+│   - Edge Caching for Static/Dynamic Content                      │
+│   - Faster Global Delivery via Google's Network                  │
+│   - SSL/TLS Termination                                          │
+│   - DDoS Protection                                              │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                    CLOUD RUN SERVICES                            │
+│                   (Serverless Containers)                        │
+│                                                                  │
+│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐    │
+│  │  Main API      │  │  Async Workers │  │  Admin API     │    │
+│  │  (FastAPI)     │  │  (Background)  │  │  (Internal)    │    │
+│  │                │  │                │  │                │    │
+│  │  Auto-Scale:   │  │  Auto-Scale:   │  │  Min Inst: 1   │    │
+│  │  0 → 100+      │  │  0 → 10+       │  │  Memory: 512MB │    │
+│  │  Memory:       │  │  Memory:       │  │                │    │
+│  │  512MB - 2GB   │  │  1GB - 3GB     │  │  HTTPS Only    │    │
+│  │                │  │                │  │                │    │
+│  │  /api/v1/*     │  │  /workers/*    │  │  /admin/*      │    │
+│  └────────────────┘  └────────────────┘  └────────────────┘    │
+│                                                                  │
+└────────┬────────────────────┬────────────────────┬──────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌────────────────┐  ┌────────────────┐  ┌────────────────┐
+│  PostgreSQL    │  │  Redis Cache   │  │  Neo4j Aura    │
+│  Neon          │  │  Upstash       │  │  + GDS         │
+│  (Serverless)  │  │  (Serverless)  │  │  ($95/month)   │
+│                │  │                │  │                │
+│  • Multi-Org   │  │  • Session     │  │  • Route       │
+│    Isolation   │  │    Storage     │  │    Optimization│
+│  • RLS Enabled │  │  • API Cache   │  │  • Graph       │
+│  • Auto-Scale  │  │  • Pay-per-req │  │    Analytics   │
+└────────────────┘  └────────────────┘  └────────────────┘
+         │                    │                    │
+         └────────────────────┴────────────────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │  External APIs  │
+                    ├─────────────────┤
+                    │ • Stripe (US)   │
+                    │ • Razorpay (IN) │
+                    │ • Mapbox Maps   │
+                    │ • Firebase FCM  │
+                    │ • GCS Storage   │
+                    └─────────────────┘</pre>
+                </div>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✓ Advantages</h4>
+                        <ul>
+                            <li>Lowest cost: $19K over 3 years</li>
+                            <li>Zero operational overhead</li>
+                            <li>Instant auto-scaling (0-100+)</li>
+                            <li>Pay only for actual usage</li>
+                            <li>Fast deployment (30-90s)</li>
+                            <li>Built-in HTTPS & SSL</li>
+                            <li>Multi-zone redundancy</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>✗ Limitations</h4>
+                        <ul>
+                            <li>Cold starts (1-3 seconds)</li>
+                            <li>Limited customization</li>
+                            <li>Max 8 vCPU, 32GB RAM</li>
+                            <li>Vendor lock-in to GCP</li>
+                            <li>60 min request timeout</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; padding: 2rem; background: rgba(76, 175, 80, 0.1); border-radius: 12px; border-left: 4px solid var(--success);">
+                    <h3 style="color: var(--success); margin-bottom: 1rem;">When to Choose Cloud Run</h3>
+                    <ul class="feature-list">
+                        <li>Early-stage platform (Year 1-2, <250K orders/month)</li>
+                        <li>Small team without dedicated DevOps/SRE</li>
+                        <li>Need to minimize infrastructure costs</li>
+                        <li>Unpredictable or variable traffic patterns</li>
+                        <li>Fast iteration and deployment required</li>
+                        <li>Simple to moderate application complexity</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- EKS Section -->
+        <section id="eks" class="section">
+            <div class="arch-container">
+                <h2 class="arch-title">Option 2: AWS EKS (Kubernetes)</h2>
+                <span class="option-badge" style="background: var(--secondary);">ENTERPRISE</span>
+
+                <div class="diagram">
+                    <pre>
+┌──────────────────────────────────────────────────────────────────┐
+│                     USERS (USA + INDIA)                          │
+│         Mobile Apps (Customer + Delivery Agent) + Dashboard      │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────┐
+│      APPLICATION LOAD BALANCER (ALB) + CLOUDFRONT CDN           │
+│                    - SSL via ACM                                 │
+│                    - DDoS Protection                             │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                      AWS EKS CLUSTER                             │
+│  ┌───────────────  CONTROL PLANE (Managed)  ─────────────────┐  │
+│  │   Kubernetes API Server, etcd, Scheduler                  │  │
+│  │   $73/month (AWS Managed)                                 │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│  ┌───────────────  WORKER NODES  ──────────────────────────┐   │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │   │
+│  │  │ t3.medium    │  │ t3.medium    │  │ t3.small     │  │   │
+│  │  │ 2 vCPU       │  │ 2 vCPU       │  │ 1 vCPU       │  │   │
+│  │  │ 4GB RAM      │  │ 4GB RAM      │  │ 2GB RAM      │  │   │
+│  │  │ API Pods     │  │ API Pods     │  │ Worker Pods  │  │   │
+│  │  │ (4-8 pods)   │  │ (4-8 pods)   │  │ (2-4 pods)   │  │   │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘  │   │
+│  │  Orchestration: Deployments, Services, HPA, Ingress     │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└────────┬────────────────────┬────────────────────┬──────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌────────────────┐  ┌────────────────┐  ┌────────────────┐
+│  RDS           │  │  ElastiCache   │  │  Neo4j Aura    │
+│  PostgreSQL    │  │  Redis         │  │  + GDS         │
+│  (Multi-AZ)    │  │  (Cluster)     │  │  ($95/month)   │
+│  db.t3.small   │  │  t3.micro      │  │  Route Engine  │
+└────────────────┘  └────────────────┘  └────────────────┘</pre>
+                </div>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✓ Advantages</h4>
+                        <ul>
+                            <li>Maximum flexibility & control</li>
+                            <li>Advanced orchestration features</li>
+                            <li>Portable to other K8s platforms</li>
+                            <li>No cold starts</li>
+                            <li>Rich ecosystem (Helm, operators)</li>
+                            <li>Microservices-ready architecture</li>
+                            <li>Service mesh capabilities</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>✗ Limitations</h4>
+                        <ul>
+                            <li>Highest cost: $61K over 3 years</li>
+                            <li>High operational complexity</li>
+                            <li>Always-on costs (idle nodes)</li>
+                            <li>Slow setup (1-2 weeks)</li>
+                            <li>Requires K8s expertise</li>
+                            <li>Maintenance overhead</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; padding: 2rem; background: rgba(26, 35, 126, 0.2); border-radius: 12px; border-left: 4px solid var(--secondary);">
+                    <h3 style="color: var(--accent); margin-bottom: 1rem;">When to Choose EKS</h3>
+                    <ul class="feature-list">
+                        <li>High-scale deployment (500K+ orders/month sustained)</li>
+                        <li>Complex microservices architecture (10+ services)</li>
+                        <li>Team has dedicated DevOps/SRE resources</li>
+                        <li>Need advanced orchestration (StatefulSets, operators)</li>
+                        <li>Multi-cloud or hybrid cloud strategy</li>
+                        <li>Existing Kubernetes expertise in team</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lambda Section -->
+        <section id="lambda" class="section">
+            <div class="arch-container">
+                <h2 class="arch-title">Option 3: AWS Lambda + API Gateway</h2>
+                <span class="option-badge" style="background: var(--accent2);">SERVERLESS</span>
+
+                <div class="diagram">
+                    <pre>
+┌──────────────────────────────────────────────────────────────────┐
+│                     USERS (USA + INDIA)                          │
+│         Mobile Apps (Customer + Delivery Agent) + Dashboard      │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────┐
+│              AWS API GATEWAY (REST + WebSocket)                  │
+│                    - Request Routing                             │
+│                    - JWT Authorization                           │
+│                    - Rate Limiting & Throttling                  │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                      AWS LAMBDA FUNCTIONS                        │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │ Auth Lambda  │  │ Order Lambda │  │ Product      │          │
+│  │ 512MB        │  │ 1GB          │  │ Lambda 512MB │          │
+│  └──────────────┘  └──────────────┘  └──────────────┘          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │ Delivery     │  │ Payment      │  │ Background   │          │
+│  │ Lambda 1GB   │  │ Lambda 1GB   │  │ Workers 2GB  │          │
+│  └──────────────┘  └──────────────┘  └──────────────┘          │
+│  Routes: /auth/*, /orders/*, /products/*, /delivery/*           │
+└────────┬────────────────────┬────────────────────┬──────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌────────────────┐  ┌────────────────┐  ┌────────────────┐
+│  RDS Aurora    │  │  ElastiCache   │  │  Neo4j Aura    │
+│  Serverless    │  │  Serverless    │  │  + GDS         │
+│  PostgreSQL    │  │  Redis         │  │  ($95/month)   │
+│  + RDS Proxy   │  │  Pay-per-req   │  │  Route Engine  │
+└────────────────┘  └────────────────┘  └────────────────┘</pre>
+                </div>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✓ Advantages</h4>
+                        <ul>
+                            <li>True pay-per-use (100ms billing)</li>
+                            <li>Massive auto-scaling capability</li>
+                            <li>No server management</li>
+                            <li>Rich AWS service integration</li>
+                            <li>Cost-effective for spiky traffic</li>
+                            <li>Fast deployments (10-30s)</li>
+                            <li>Event-driven architecture</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>✗ Limitations</h4>
+                        <ul>
+                            <li>Cold start latency (1-3s)</li>
+                            <li>Higher costs at scale vs Cloud Run</li>
+                            <li>API Gateway timeout (29s)</li>
+                            <li>10MB payload limit</li>
+                            <li>Increased complexity</li>
+                            <li>Connection pooling required</li>
+                            <li>Strong vendor lock-in</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; padding: 2rem; background: rgba(255, 107, 53, 0.1); border-radius: 12px; border-left: 4px solid var(--accent2);">
+                    <h3 style="color: var(--accent2); margin-bottom: 1rem;">When to Choose Lambda</h3>
+                    <ul class="feature-list">
+                        <li>Highly variable or unpredictable traffic patterns</li>
+                        <li>Event-driven architecture (webhooks, SQS, S3 triggers)</li>
+                        <li>Low baseline traffic (<50K requests/month)</li>
+                        <li>Need deep AWS service integration</li>
+                        <li>Microservices with independent scaling needs</li>
+                        <li>Can tolerate cold starts or budget for provisioned concurrency</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison" class="section">
+            <h2 class="arch-title">Architecture Comparison</h2>
+
+            <div class="comparison-grid">
+                <div class="option-card">
+                    <span class="option-badge" style="background: var(--success);">BEST VALUE</span>
+                    <h3>Cloud Run</h3>
+                    <div class="cost-display">$19K</div>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">3-Year Total (₹17.4L)</p>
+
+                    <ul class="feature-list">
+                        <li>Serverless containers</li>
+                        <li>0-100+ auto-scaling</li>
+                        <li>30-90s deployments</li>
+                        <li>Low complexity</li>
+                        <li>Setup: 1-2 days</li>
+                    </ul>
+
+                    <div
+                        style="margin-top: 2rem; padding: 1rem; background: rgba(76, 175, 80, 0.2); border-radius: 8px;">
+                        <strong style="color: var(--success);">51% cheaper than Lambda</strong><br>
+                        <strong style="color: var(--success);">69% cheaper than EKS</strong>
+                    </div>
+                </div>
+
+                <div class="option-card">
+                    <span class="option-badge" style="background: var(--secondary);">HIGH SCALE</span>
+                    <h3>AWS EKS</h3>
+                    <div class="cost-display" style="color: var(--secondary);">$61K</div>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">3-Year Total (₹55.3L)</p>
+
+                    <ul class="feature-list">
+                        <li>Full Kubernetes</li>
+                        <li>Advanced orchestration</li>
+                        <li>3-8 min deployments</li>
+                        <li>High complexity</li>
+                        <li>Setup: 1-2 weeks</li>
+                    </ul>
+
+                    <div
+                        style="margin-top: 2rem; padding: 1rem; background: rgba(26, 35, 126, 0.2); border-radius: 8px;">
+                        <strong style="color: var(--accent);">Best for 500K+/month</strong><br>
+                        <strong style="color: var(--accent);">Enterprise-grade</strong>
+                    </div>
+                </div>
+
+                <div class="option-card">
+                    <span class="option-badge" style="background: var(--accent2);">FLEXIBLE</span>
+                    <h3>AWS Lambda</h3>
+                    <div class="cost-display" style="color: var(--accent2);">$40K</div>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">3-Year Total (₹35.8L)</p>
+
+                    <ul class="feature-list">
+                        <li>Serverless functions</li>
+                        <li>Event-driven</li>
+                        <li>10-30s deployments</li>
+                        <li>Medium complexity</li>
+                        <li>Setup: 2-3 days</li>
+                    </ul>
+
+                    <div
+                        style="margin-top: 2rem; padding: 1rem; background: rgba(255, 107, 53, 0.2); border-radius: 8px;">
+                        <strong style="color: var(--accent2);">35% cheaper than EKS</strong><br>
+                        <strong style="color: var(--accent2);">Great for spiky loads</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h3 class="arch-title" style="font-size: 2rem;">Feature Comparison Matrix</h3>
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Cloud Run</th>
+                            <th>AWS EKS</th>
+                            <th>AWS Lambda</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Setup Time</strong></td>
+                            <td class="best-value">1-2 days</td>
+                            <td>1-2 weeks</td>
+                            <td>2-3 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deployment Speed</strong></td>
+                            <td class="best-value">30-90 seconds</td>
+                            <td>3-8 minutes</td>
+                            <td class="best-value">10-30 seconds</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Auto-Scaling</strong></td>
+                            <td class="best-value">0 to 100+ instances</td>
+                            <td>Pod-based (HPA)</td>
+                            <td class="best-value">Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cold Starts</strong></td>
+                            <td>1-3 seconds</td>
+                            <td class="best-value">None</td>
+                            <td>1-3 seconds</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operational Complexity</strong></td>
+                            <td class="best-value">Low</td>
+                            <td>High</td>
+                            <td>Medium</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vendor Lock-in</strong></td>
+                            <td>Medium (GCP)</td>
+                            <td class="best-value">Low (Portable)</td>
+                            <td>High (AWS)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Team Size Required</strong></td>
+                            <td class="best-value">7-8 (no dedicated SRE)</td>
+                            <td>10+ (2+ SRE needed)</td>
+                            <td>7-8 (no dedicated SRE)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Best For Scale</strong></td>
+                            <td class="best-value">
+                                <250K orders/month</td>
+                            <td>500K+ orders/month</td>
+                            <td>Variable loads</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Costs Section -->
+        <section id="costs" class="section">
+            <h2 class="arch-title">Infrastructure Cost Analysis</h2>
+
+            <div style="margin: 3rem 0;">
+                <h3
+                    style="color: var(--accent); font-family: 'Clash Display', sans-serif; font-size: 2rem; margin-bottom: 2rem;">
+                    Year 1 Production Costs (50,000 Orders)</h3>
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Cloud Run</th>
+                            <th>AWS EKS</th>
+                            <th>AWS Lambda</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Compute</td>
+                            <td>$120</td>
+                            <td>$1,800</td>
+                            <td>$300</td>
+                        </tr>
+                        <tr>
+                            <td>Database (PostgreSQL)</td>
+                            <td>$840</td>
+                            <td>$600</td>
+                            <td>$1,440</td>
+                        </tr>
+                        <tr>
+                            <td>Cache (Redis)</td>
+                            <td>$120</td>
+                            <td>$300</td>
+                            <td>$240</td>
+                        </tr>
+                        <tr>
+                            <td>Neo4j Aura + GDS</td>
+                            <td>$1,140</td>
+                            <td>$1,140</td>
+                            <td>$1,140</td>
+                        </tr>
+                        <tr>
+                            <td>Storage</td>
+                            <td>$60</td>
+                            <td>$120</td>
+                            <td>$96</td>
+                        </tr>
+                        <tr>
+                            <td>Load Balancer/API Gateway</td>
+                            <td>$216</td>
+                            <td>$300</td>
+                            <td>$100</td>
+                        </tr>
+                        <tr>
+                            <td>Monitoring & Logging</td>
+                            <td>$240</td>
+                            <td>$480</td>
+                            <td>$300</td>
+                        </tr>
+                        <tr>
+                            <td>Networking & Misc</td>
+                            <td>$180</td>
+                            <td>$900</td>
+                            <td>$240</td>
+                        </tr>
+                        <tr>
+                            <td>Mapbox API</td>
+                            <td>$300</td>
+                            <td>$300</td>
+                            <td>$300</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>TOTAL (USD)</strong></td>
+                            <td class="best-value"><strong>$3,216</strong></td>
+                            <td><strong>$7,176</strong></td>
+                            <td><strong>$4,236</strong></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>TOTAL (INR)</strong></td>
+                            <td class="best-value"><strong>₹2.9L</strong></td>
+                            <td><strong>₹6.5L</strong></td>
+                            <td><strong>₹3.8L</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin: 3rem 0;">
+                <h3
+                    style="color: var(--accent); font-family: 'Clash Display', sans-serif; font-size: 2rem; margin-bottom: 2rem;">
+                    3-Year Summary</h3>
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Total USD</th>
+                            <th>Total INR</th>
+                            <th>Savings vs EKS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cloud Run</strong></td>
+                            <td class="best-value"><strong>$19,248</strong></td>
+                            <td class="best-value"><strong>₹17.4L</strong></td>
+                            <td class="best-value">69% ($42K saved)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AWS Lambda</strong></td>
+                            <td><strong>$39,636</strong></td>
+                            <td><strong>₹35.8L</strong></td>
+                            <td class="best-value">35% ($21K saved)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AWS EKS</strong></td>
+                            <td><strong>$61,248</strong></td>
+                            <td><strong>₹55.3L</strong></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div
+                style="margin-top: 4rem; padding: 3rem; background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(46, 125, 50, 0.1) 100%); border-radius: 16px; border: 2px solid var(--success);">
+                <h3
+                    style="color: var(--success); font-family: 'Clash Display', sans-serif; font-size: 2rem; margin-bottom: 1.5rem;">
+                    💰 Cost Efficiency Analysis</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div>
+                        <div style="font-size: 3rem; font-weight: 700; color: var(--success);">51%</div>
+                        <div style="color: var(--text);">Cloud Run cheaper than Lambda</div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Save $20,388 over
+                            3 years</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 3rem; font-weight: 700; color: var(--success);">69%</div>
+                        <div style="color: var(--text);">Cloud Run cheaper than EKS</div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Save $42,000 over
+                            3 years</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 3rem; font-weight: 700; color: var(--success);">$10.96</div>
+                        <div style="color: var(--text);">Cloud Run cost per 1K orders (Y3)</div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">vs $26.16 (Lambda)
+                            / $40.48 (EKS)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section id="team" class="section">
+            <h2 class="arch-title">Team Structure (7-8 Members)</h2>
+
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-icon">🔵</div>
+                    <div class="team-title">Backend Team</div>
+                    <div class="team-count">3 Engineers</div>
+                    <ul class="feature-list">
+                        <li><strong>Senior:</strong> FastAPI, PostgreSQL, Neo4j, Cloud architecture</li>
+                        <li><strong>Mid (Payments):</strong> Stripe, Razorpay, webhooks, settlement</li>
+                        <li><strong>Mid (Delivery):</strong> Route optimization, GPS, real-time tracking</li>
+                    </ul>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-icon">🟣</div>
+                    <div class="team-title">Mobile Team</div>
+                    <div class="team-count">2-3 Engineers</div>
+                    <ul class="feature-list">
+                        <li><strong>Lead:</strong> Flutter architecture, state management, builds (iOS/Android)</li>
+                        <li><strong>Developer:</strong> Customer app UI/UX, checkout, product catalog</li>
+                        <li><strong>Developer (Optional):</strong> Delivery agent app, maps, GPS integration</li>
+                    </ul>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-icon">🟡</div>
+                    <div class="team-title">DevOps</div>
+                    <div class="team-count">1 Engineer</div>
+                    <ul class="feature-list">
+                        <li>Cloud infrastructure (GCP/AWS)</li>
+                        <li>CI/CD pipeline management</li>
+                        <li>Monitoring & observability</li>
+                        <li>Database backups & DR</li>
+                        <li>Security & compliance</li>
+                    </ul>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-icon">🟢</div>
+                    <div class="team-title">QA</div>
+                    <div class="team-count">1 Engineer</div>
+                    <ul class="feature-list">
+                        <li>Test automation framework</li>
+                        <li>API & integration testing</li>
+                        <li>Load & performance testing</li>
+                        <li>Mobile app testing</li>
+                        <li>Release validation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 3rem; padding: 2rem; background: rgba(0, 217, 255, 0.1); border-radius: 12px; border-left: 4px solid var(--accent);">
+                <h3 style="color: var(--accent); margin-bottom: 1rem;">Note on Team Size</h3>
+                <p style="line-height: 1.8;">
+                    <strong>7 Members:</strong> Lean startup configuration, combine Customer App + Delivery Agent App
+                    development<br>
+                    <strong>8 Members:</strong> Recommended for faster delivery, dedicated Agent App developer or add
+                    Product Manager<br>
+                    <strong>No Team Costs Listed:</strong> Salaries vary significantly by location, experience, and
+                    market conditions
+                </p>
+            </div>
+        </section>
+
+        <!-- Recommendation Section -->
+        <section id="recommendation" class="section">
+            <div class="recommendation">
+                <h2>⭐ RECOMMENDED STRATEGY ⭐</h2>
+                <p style="font-size: 2rem; font-weight: 700; margin: 2rem 0;">Start with Google Cloud Run</p>
+                <p>Then migrate to EKS only when sustained >500K orders/month</p>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h3 class="arch-title">Why Cloud Run First?</h3>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                    <div
+                        style="background: rgba(76, 175, 80, 0.1); padding: 2rem; border-radius: 12px; border-left: 4px solid var(--success);">
+                        <h4 style="color: var(--success); font-size: 1.5rem; margin-bottom: 1rem;">💰 Cost</h4>
+                        <p style="font-size: 2rem; font-weight: 700; color: var(--success);">$19K</p>
+                        <p style="color: var(--text-muted);">vs $40K (Lambda) or $61K (EKS) over 3 years</p>
+                        <p style="margin-top: 1rem;">Save <strong>51-69%</strong> on infrastructure</p>
+                    </div>
+
+                    <div
+                        style="background: rgba(0, 217, 255, 0.1); padding: 2rem; border-radius: 12px; border-left: 4px solid var(--accent);">
+                        <h4 style="color: var(--accent); font-size: 1.5rem; margin-bottom: 1rem;">⚡ Speed</h4>
+                        <p style="font-size: 2rem; font-weight: 700; color: var(--accent);">1-2 Days</p>
+                        <p style="color: var(--text-muted);">Setup time vs weeks for EKS</p>
+                        <p style="margin-top: 1rem;"><strong>30-90 second</strong> deployments</p>
+                    </div>
+
+                    <div
+                        style="background: rgba(255, 107, 53, 0.1); padding: 2rem; border-radius: 12px; border-left: 4px solid var(--accent2);">
+                        <h4 style="color: var(--accent2); font-size: 1.5rem; margin-bottom: 1rem;">👥 Simplicity</h4>
+                        <p style="font-size: 2rem; font-weight: 700; color: var(--accent2);">Zero</p>
+                        <p style="color: var(--text-muted);">DevOps overhead</p>
+                        <p style="margin-top: 1rem;">Focus on <strong>product, not infrastructure</strong></p>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; padding: 2.5rem; background: rgba(0, 217, 255, 0.1); border-radius: 16px; border: 2px solid var(--accent);">
+                    <h3
+                        style="color: var(--accent); font-family: 'Clash Display', sans-serif; font-size: 2rem; margin-bottom: 1.5rem;">
+                        📋 Migration Path</h3>
+                    <div style="display: grid; gap: 1.5rem;">
+                        <div style="display: flex; gap: 1.5rem; align-items: start;">
+                            <div
+                                style="background: var(--success); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
+                                1</div>
+                            <div>
+                                <strong>Year 1-2: Cloud Run</strong><br>
+                                <span style="color: var(--text-muted);">Launch platform, validate market, iterate
+                                    quickly. Handle up to 250K orders/month efficiently.</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1.5rem; align-items: start;">
+                            <div
+                                style="background: var(--accent); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
+                                2</div>
+                            <div>
+                                <strong>Monitor Metrics</strong><br>
+                                <span style="color: var(--text-muted);">Track order volume, response times, and costs.
+                                    Cloud Run can handle much more than expected.</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1.5rem; align-items: start;">
+                            <div
+                                style="background: var(--accent2); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
+                                3</div>
+                            <div>
+                                <strong>Year 3+: Consider EKS</strong><br>
+                                <span style="color: var(--text-muted);">Only migrate when sustained >500K orders/month
+                                    AND you need advanced K8s features. Otherwise, stay on Cloud Run.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; padding: 2rem; background: rgba(255, 193, 7, 0.1); border-radius: 12px; border-left: 4px solid var(--warning);">
+                    <h3 style="color: var(--warning); margin-bottom: 1rem;">⚠️ Important Note</h3>
+                    <p style="line-height: 1.8;">
+                        Most startups <strong>never</strong> need to migrate from Cloud Run. The platform scales to
+                        millions of requests/month.
+                        Only move to EKS if you have <strong>specific</strong> requirements that Cloud Run cannot meet
+                        (e.g., very complex stateful workloads,
+                        specialized hardware needs, or multi-cloud portability requirements).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
