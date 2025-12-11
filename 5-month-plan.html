@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5-Month Development Plan - Zero Infrastructure Cost</title>
+    <title>5-Month Development Plan - Technical Architecture</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
         rel="stylesheet">
     <style>
         * {
@@ -16,131 +16,239 @@
         }
 
         :root {
-            --primary: #1a1f3a;
-            --secondary: #2d3561;
-            --accent: #00f5ff;
-            --accent2: #ff6b6b;
-            --success: #51cf66;
-            --warning: #ffd43b;
-            --bg: #0d1117;
-            --card: #1c2128;
-            --text: #f0f6fc;
-            --text-muted: #8b949e;
-            --purple: #a78bfa;
-            --pink: #f472b6;
+            --bg-primary: #0a0e27;
+            --bg-secondary: #131a3a;
+            --bg-card: #1a2142;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-pink: #ec4899;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #2d3748;
         }
 
         body {
-            font-family: 'Space Mono', monospace;
-            background: linear-gradient(135deg, var(--bg) 0%, #161b22 100%);
-            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 0 2rem;
         }
 
         header {
-            background: linear-gradient(135deg, #1a1f3a 0%, #2d3561 50%, #1a1f3a 100%);
-            padding: 4rem 2rem;
-            border-bottom: 4px solid var(--accent);
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+            padding: 3rem 0;
+            border-bottom: 3px solid var(--accent-blue);
         }
 
         h1 {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            background: linear-gradient(135deg, #00f5ff 0%, #ff6b6b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
         }
 
         .subtitle {
-            font-size: 1.5rem;
-            color: var(--accent);
-            font-weight: 700;
+            font-size: 1.25rem;
+            opacity: 0.9;
+            font-weight: 500;
         }
 
         .section {
-            background: linear-gradient(135deg, rgba(28, 33, 40, 0.9) 0%, rgba(45, 53, 97, 0.3) 100%);
-            border: 2px solid var(--accent);
-            border-radius: 16px;
-            padding: 2rem;
-            margin: 2rem 0;
+            margin: 4rem 0;
         }
 
         .section-title {
-            font-family: 'Clash Display', sans-serif;
             font-size: 2rem;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-        }
-
-        .diagram {
-            font-family: 'Space Mono', monospace;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 1.5rem;
-            border-radius: 12px;
-            overflow-x: auto;
-            border: 1px solid rgba(0, 245, 255, 0.3);
-            margin: 1.5rem 0;
-        }
-
-        .diagram pre {
-            color: var(--accent);
-            font-size: 0.8rem;
-            line-height: 1.6;
-        }
-
-        .timeline {
-            margin: 2rem 0;
-        }
-
-        .month-card {
-            background: rgba(0, 245, 255, 0.1);
-            border-left: 4px solid var(--accent);
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border-radius: 8px;
-        }
-
-        .month-title {
-            font-size: 1.5rem;
-            color: var(--accent);
             font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .deliverables {
-            list-style: none;
-            margin: 1rem 0;
-        }
-
-        .deliverables li {
-            padding: 0.5rem 0;
+            margin-bottom: 2rem;
+            color: var(--accent-blue);
             display: flex;
-            align-items: start;
+            align-items: center;
             gap: 1rem;
         }
 
-        .deliverables li::before {
-            content: '✓';
-            color: var(--success);
-            font-weight: 700;
-            font-size: 1.2rem;
-            flex-shrink: 0;
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 2rem;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple));
+            border-radius: 4px;
         }
 
-        .tech-stack {
+        /* Flow Diagram */
+        .flow-container {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+        }
+
+        .flow-layer {
+            margin: 2rem 0;
+        }
+
+        .flow-layer-title {
+            text-align: center;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-box {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-blue);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            min-width: 200px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .flow-box.large {
+            min-width: 280px;
+            padding: 2rem 2.5rem;
+        }
+
+        .flow-box.green {
+            border-color: var(--accent-green);
+        }
+
+        .flow-box.purple {
+            border-color: var(--accent-purple);
+        }
+
+        .flow-box.orange {
+            border-color: var(--accent-orange);
+        }
+
+        .flow-box.pink {
+            border-color: var(--accent-pink);
+        }
+
+        .flow-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .flow-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: var(--accent-blue);
+        }
+
+        .flow-arrow-down {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            margin: 1rem 0;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-marker {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .timeline-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent-blue);
+        }
+
+        .timeline-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .deliverables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .deliverable-item {
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 3px solid var(--accent-green);
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .deliverable-item strong {
+            color: var(--accent-green);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Tech Stack Grid */
+        .tech-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
@@ -148,26 +256,71 @@
         }
 
         .tech-card {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
             border-radius: 12px;
-            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
         }
 
-        .tech-card h4 {
-            color: var(--success);
+        .tech-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .tech-name {
+            font-size: 1.25rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
 
-        .free-badge {
-            background: var(--success);
-            color: #000;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: inline-block;
-            margin-left: 0.5rem;
+        .tech-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-blue);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .flow-row {
+                flex-direction: column;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
@@ -175,662 +328,649 @@
 <body>
     <header>
         <div class="container">
-            <h1>🚀 5-Month Zero-Cost Development Plan</h1>
-            <p class="subtitle">Full Technical Architecture • Free Tier Everything • Production Ready</p>
+            <h1>🚀 5-Month Development Plan</h1>
+            <p class="subtitle">Complete Technical Architecture & Development Flow</p>
         </div>
     </header>
 
     <div class="container">
-        <!-- Free Tier Stack -->
-        <div class="section">
-            <h2 class="section-title">💰 100% Free Infrastructure Stack</h2>
-            <div class="tech-stack">
+        <!-- Technology Stack -->
+        <section class="section">
+            <h2 class="section-title">Technology Stack</h2>
+            <div class="tech-grid">
                 <div class="tech-card">
-                    <h4>🔧 Backend <span class="free-badge">FREE</span></h4>
-                    <div>FastAPI (Python)</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">Deployed on Render Free Tier</div>
+                    <span class="tech-icon">📱</span>
+                    <div class="tech-name">Flutter</div>
+                    <div class="tech-desc">Cross-platform mobile development for iOS & Android with 90% code reuse
+                        between Customer and Agent apps</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Dart</span>
+                        <span class="tech-tag">Riverpod</span>
+                        <span class="tech-tag">go_router</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>🗄️ Database <span class="free-badge">FREE</span></h4>
-                    <div>PostgreSQL (Neon)</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">3GB storage, auto-suspend</div>
+                    <span class="tech-icon">🔧</span>
+                    <div class="tech-name">FastAPI</div>
+                    <div class="tech-desc">Modern Python web framework for building high-performance async APIs</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python 3.11+</span>
+                        <span class="tech-tag">Async</span>
+                        <span class="tech-tag">Pydantic</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>📦 Cache <span class="free-badge">FREE</span></h4>
-                    <div>Redis (Upstash)</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">10K commands/day</div>
+                    <span class="tech-icon">🗄️</span>
+                    <div class="tech-name">PostgreSQL</div>
+                    <div class="tech-desc">Powerful relational database with Row-Level Security for multi-tenant data
+                        isolation</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">RLS</span>
+                        <span class="tech-tag">Neon</span>
+                        <span class="tech-tag">SQLAlchemy</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>📱 Mobile <span class="free-badge">FREE</span></h4>
-                    <div>Flutter (iOS + Android)</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">2 apps, 90% code reuse</div>
+                    <span class="tech-icon">⚡</span>
+                    <div class="tech-name">Redis</div>
+                    <div class="tech-desc">In-memory data store for caching, session management, and real-time features
+                    </div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Upstash</span>
+                        <span class="tech-tag">Serverless</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>🔐 Auth <span class="free-badge">FREE</span></h4>
-                    <div>Supabase Auth</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">50K MAU free</div>
+                    <span class="tech-icon">🕸️</span>
+                    <div class="tech-name">Neo4j + GDS</div>
+                    <div class="tech-desc">Graph database with Graph Data Science library for route optimization</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Cypher</span>
+                        <span class="tech-tag">Pathfinding</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>📦 Storage <span class="free-badge">FREE</span></h4>
-                    <div>Cloudinary / Supabase</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">25GB storage + CDN</div>
+                    <span class="tech-icon">💻</span>
+                    <div class="tech-name">Next.js</div>
+                    <div class="tech-desc">React framework for building the admin dashboard with server-side rendering
+                    </div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">TypeScript</span>
+                        <span class="tech-tag">Vercel</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>🗺️ Maps <span class="free-badge">FREE</span></h4>
-                    <div>OpenStreetMap + Leaflet</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">No API key needed</div>
+                    <span class="tech-icon">🔐</span>
+                    <div class="tech-name">Supabase Auth</div>
+                    <div class="tech-desc">Authentication service with JWT, OAuth providers, and user management</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">JWT</span>
+                        <span class="tech-tag">OAuth</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>🔔 Push <span class="free-badge">FREE</span></h4>
-                    <div>Firebase FCM</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">Unlimited messages</div>
+                    <span class="tech-icon">💳</span>
+                    <div class="tech-name">Stripe + Razorpay</div>
+                    <div class="tech-desc">Payment processing for USD (USA) and INR (India) with webhook integration
+                    </div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Multi-currency</span>
+                        <span class="tech-tag">Webhooks</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>🚀 CI/CD <span class="free-badge">FREE</span></h4>
-                    <div>GitHub Actions</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">2000 min/month</div>
+                    <span class="tech-icon">🗺️</span>
+                    <div class="tech-name">OpenStreetMap</div>
+                    <div class="tech-desc">Open-source mapping solution with Leaflet for GPS tracking and navigation
+                    </div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Leaflet</span>
+                        <span class="tech-tag">Tiles</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>📊 Analytics <span class="free-badge">FREE</span></h4>
-                    <div>Mixpanel / PostHog</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">1M events/month</div>
+                    <span class="tech-icon">🔔</span>
+                    <div class="tech-name">Firebase FCM</div>
+                    <div class="tech-desc">Cross-platform push notification service for real-time order updates</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Push Notifs</span>
+                        <span class="tech-tag">Cloud Messaging</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>📈 Monitoring <span class="free-badge">FREE</span></h4>
-                    <div>Better Stack / Sentry</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">500 errors/month</div>
+                    <span class="tech-icon">🚀</span>
+                    <div class="tech-name">GitHub Actions</div>
+                    <div class="tech-desc">CI/CD automation for testing, building, and deploying all services</div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">CI/CD</span>
+                        <span class="tech-tag">Workflows</span>
+                    </div>
                 </div>
+
                 <div class="tech-card">
-                    <h4>💳 Payments <span class="free-badge">FREE*</span></h4>
-                    <div>Stripe Test Mode</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">*Transaction fees apply in production
+                    <span class="tech-icon">📊</span>
+                    <div class="tech-name">Monitoring Stack</div>
+                    <div class="tech-desc">Sentry for error tracking, Better Stack for uptime, Mixpanel for analytics
+                    </div>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Sentry</span>
+                        <span class="tech-tag">Analytics</span>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Complete Architecture -->
-        <div class="section">
-            <h2 class="section-title">🏗️ Complete System Architecture</h2>
-            <div class="diagram">
-                <pre>
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              END USERS (USA + INDIA)                            │
-│                    📱 Customer App  •  🚚 Delivery Agent App                    │
-└────────────────────────────────┬────────────────────────────────────────────────┘
-                                 │
-                                 ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           CLOUDFLARE (Free CDN + WAF)                           │
-│                    • SSL/TLS  • DDoS Protection  • Caching                      │
-└────────────────────────────────┬────────────────────────────────────────────────┘
-                                 │
-                 ┌───────────────┴───────────────┐
-                 │                               │
-                 ▼                               ▼
-┌─────────────────────────────┐   ┌───────────────────────────────────┐
-│    RENDER.COM FREE TIER     │   │      VERCEL FREE TIER             │
-│   Backend API (FastAPI)     │   │   Admin Dashboard (Next.js)       │
-│                             │   │                                   │
-│  • Auto-deploy from Git     │   │  • Serverless Functions           │
-│  • 750 hrs/month free       │   │  • 100GB bandwidth/month          │
-│  • Auto-sleep after 15 min  │   │  • Custom domains                 │
-│  • HTTPS included           │   │  • Edge network                   │
-└───────────┬─────────────────┘   └───────────────────────────────────┘
-            │
-            │ ┌────────────────── API ROUTES ──────────────────┐
-            │ │                                                │
-            ▼ ▼                                                ▼
-┌─────────────────────┐  ┌──────────────┐  ┌──────────────────────────┐
-│   NEON POSTGRESQL   │  │ UPSTASH REDIS│  │   SUPABASE AUTH + STORAGE│
-│   (Free Tier)       │  │ (Free Tier)  │  │   (Free Tier)            │
-│                     │  │              │  │                          │
-│ • 3GB Storage       │  │ • 10K        │  │ • 50K MAU                │
-│ • Auto-suspend      │  │   cmds/day   │  │ • 1GB storage            │
-│ • Branching         │  │ • 256MB RAM  │  │ • Row-level security     │
-│ • Connection pool   │  │ • Serverless │  │ • OAuth providers        │
-└─────────────────────┘  └──────────────┘  └──────────────────────────┘
-            │                    │                      │
-            └────────────────────┴──────────────────────┘
-                                 │
-                                 ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                            EXTERNAL SERVICES (FREE TIERS)                       │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Firebase FCM │  │ OpenStreetMap│  │  Cloudinary  │  │  Stripe Test │      │
-│  │ Push Notifs  │  │ Maps & Tiles │  │ Image Upload │  │  Webhooks    │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
-└─────────────────────────────────────────────────────────────────────────────────┘
-</pre>
+        <!-- Complete System Flow -->
+        <section class="section">
+            <h2 class="section-title">Complete System Architecture Flow</h2>
+
+            <div class="flow-container">
+                <!-- Client Layer -->
+                <div class="flow-layer">
+                    <div class="flow-layer-title">Client Applications</div>
+                    <div class="flow-row">
+                        <div class="flow-box large green">
+                            <span class="flow-icon">📱</span>
+                            <div class="flow-title">Customer Mobile App</div>
+                            <div class="flow-subtitle">Flutter • iOS + Android</div>
+                        </div>
+                        <div class="flow-box large purple">
+                            <span class="flow-icon">🚚</span>
+                            <div class="flow-title">Agent Mobile App</div>
+                            <div class="flow-subtitle">Flutter • iOS + Android</div>
+                        </div>
+                        <div class="flow-box large orange">
+                            <span class="flow-icon">💻</span>
+                            <div class="flow-title">Admin Dashboard</div>
+                            <div class="flow-subtitle">Next.js • Web</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- Gateway Layer -->
+                <div class="flow-layer">
+                    <div class="flow-layer-title">API Gateway & CDN</div>
+                    <div class="flow-row">
+                        <div class="flow-box large">
+                            <span class="flow-icon">🌐</span>
+                            <div class="flow-title">Cloudflare / API Gateway</div>
+                            <div class="flow-subtitle">SSL • DDoS Protection • Load Balancing</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- Backend Layer -->
+                <div class="flow-layer">
+                    <div class="flow-layer-title">Backend Services</div>
+                    <div class="flow-row">
+                        <div class="flow-box green">
+                            <span class="flow-icon">🔐</span>
+                            <div class="flow-title">Auth Service</div>
+                            <div class="flow-subtitle">JWT • OAuth</div>
+                        </div>
+                        <div class="flow-box purple">
+                            <span class="flow-icon">📦</span>
+                            <div class="flow-title">Product Service</div>
+                            <div class="flow-subtitle">Catalog • Search</div>
+                        </div>
+                        <div class="flow-box orange">
+                            <span class="flow-icon">🛒</span>
+                            <div class="flow-title">Order Service</div>
+                            <div class="flow-subtitle">Cart • Checkout</div>
+                        </div>
+                        <div class="flow-box pink">
+                            <span class="flow-icon">🚚</span>
+                            <div class="flow-title">Delivery Service</div>
+                            <div class="flow-subtitle">GPS • Routing</div>
+                        </div>
+                        <div class="flow-box">
+                            <span class="flow-icon">💳</span>
+                            <div class="flow-title">Payment Service</div>
+                            <div class="flow-subtitle">Stripe • Razorpay</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- Data Layer -->
+                <div class="flow-layer">
+                    <div class="flow-layer-title">Data & Storage Layer</div>
+                    <div class="flow-row">
+                        <div class="flow-box green">
+                            <span class="flow-icon">🗄️</span>
+                            <div class="flow-title">PostgreSQL</div>
+                            <div class="flow-subtitle">Primary Database</div>
+                        </div>
+                        <div class="flow-box orange">
+                            <span class="flow-icon">⚡</span>
+                            <div class="flow-title">Redis</div>
+                            <div class="flow-subtitle">Cache & Sessions</div>
+                        </div>
+                        <div class="flow-box purple">
+                            <span class="flow-icon">🕸️</span>
+                            <div class="flow-title">Neo4j</div>
+                            <div class="flow-subtitle">Route Optimization</div>
+                        </div>
+                        <div class="flow-box pink">
+                            <span class="flow-icon">📦</span>
+                            <div class="flow-title">Object Storage</div>
+                            <div class="flow-subtitle">Images & Files</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- External Services -->
+                <div class="flow-layer">
+                    <div class="flow-layer-title">External Integrations</div>
+                    <div class="flow-row">
+                        <div class="flow-box">
+                            <div class="flow-title">🔔 Firebase FCM</div>
+                        </div>
+                        <div class="flow-box">
+                            <div class="flow-title">🗺️ Maps API</div>
+                        </div>
+                        <div class="flow-box">
+                            <div class="flow-title">📊 Analytics</div>
+                        </div>
+                        <div class="flow-box">
+                            <div class="flow-title">📧 Email Service</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- CI/CD Pipeline -->
-        <div class="section">
-            <h2 class="section-title">🔄 CI/CD Pipeline Architecture</h2>
-            <div class="diagram">
-                <pre>
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              GITHUB REPOSITORY                                  │
-│                    Main Branch  •  Develop Branch  •  Feature/*                │
-└────────────────────────────────┬────────────────────────────────────────────────┘
-                                 │
-                                 │ (git push)
-                                 ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                          GITHUB ACTIONS (FREE 2000 min/month)                   │
-│                                                                                 │
-│  ┌──────────────────────────────────────────────────────────────────────────┐ │
-│  │  BACKEND PIPELINE (.github/workflows/backend.yml)                        │ │
-│  │  ────────────────────────────────────────────────────────────────        │ │
-│  │  1. Checkout code                                                        │ │
-│  │  2. Setup Python 3.11                                                    │ │
-│  │  3. Install dependencies (pip install -r requirements.txt)               │ │
-│  │  4. Run linting (flake8, black, mypy)                                   │ │
-│  │  5. Run unit tests (pytest with coverage)                               │ │
-│  │  6. Run integration tests (API endpoints)                               │ │
-│  │  7. Build Docker image                                                   │ │
-│  │  8. Deploy to Render.com (auto-deploy webhook)                          │ │
-│  └──────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                 │
-│  ┌──────────────────────────────────────────────────────────────────────────┐ │
-│  │  MOBILE PIPELINE (.github/workflows/mobile.yml)                          │ │
-│  │  ────────────────────────────────────────────────────────────────        │ │
-│  │  1. Checkout code                                                        │ │
-│  │  2. Setup Flutter 3.x                                                    │ │
-│  │  3. Install dependencies (flutter pub get)                              │ │
-│  │  4. Run static analysis (flutter analyze)                               │ │
-│  │  5. Run unit tests (flutter test)                                       │ │
-│  │  6. Build APK (android) - flutter build apk                             │ │
-│  │  7. Build IPA (ios) - flutter build ios (requires Mac runner)          │ │
-│  │  8. Upload to Firebase App Distribution (beta testing)                  │ │
-│  └──────────────────────────────────────────────────────────────────────────┘ │
-│                                                                                 │
-│  ┌──────────────────────────────────────────────────────────────────────────┐ │
-│  │  ADMIN DASHBOARD PIPELINE (.github/workflows/admin.yml)                  │ │
-│  │  ────────────────────────────────────────────────────────────────        │ │
-│  │  1. Checkout code                                                        │ │
-│  │  2. Setup Node.js 18                                                     │ │
-│  │  3. Install dependencies (npm ci)                                        │ │
-│  │  4. Run linting (eslint)                                                 │ │
-│  │  5. Run type checking (tsc --noEmit)                                     │ │
-│  │  6. Run tests (jest)                                                     │ │
-│  │  7. Build production bundle (next build)                                 │ │
-│  │  8. Deploy to Vercel (auto-deploy from git)                             │ │
-│  └──────────────────────────────────────────────────────────────────────────┘ │
-└────────────────────────────────┬────────────────────────────────────────────────┘
-                                 │
-                 ┌───────────────┴───────────────┬────────────────┐
-                 ▼                               ▼                ▼
-┌─────────────────────────┐   ┌──────────────────────┐   ┌────────────────────┐
-│   RENDER.COM (Auto)     │   │   VERCEL (Auto)      │   │ FIREBASE APP DIST  │
-│   Backend Deployment    │   │   Frontend Deploy    │   │ Mobile Beta Test   │
-└─────────────────────────┘   └──────────────────────┘   └────────────────────┘
-</pre>
+        <!-- CI/CD Pipeline Flow -->
+        <section class="section">
+            <h2 class="section-title">CI/CD Pipeline Flow</h2>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="flow-box">
+                        <span class="flow-icon">💻</span>
+                        <div class="flow-title">Developer Commits</div>
+                        <div class="flow-subtitle">git push to GitHub</div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-row">
+                    <div class="flow-box large green">
+                        <span class="flow-icon">⚙️</span>
+                        <div class="flow-title">GitHub Actions Triggered</div>
+                        <div class="flow-subtitle">Automated Workflow Starts</div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-layer">
+                    <div class="flow-layer-title">Validation & Testing</div>
+                    <div class="flow-row">
+                        <div class="flow-box green">
+                            <div class="flow-title">Linting</div>
+                            <div class="flow-subtitle">Code quality</div>
+                        </div>
+                        <div class="flow-box purple">
+                            <div class="flow-title">Type Checking</div>
+                            <div class="flow-subtitle">Static analysis</div>
+                        </div>
+                        <div class="flow-box orange">
+                            <div class="flow-title">Unit Tests</div>
+                            <div class="flow-subtitle">Component tests</div>
+                        </div>
+                        <div class="flow-box pink">
+                            <div class="flow-title">Integration Tests</div>
+                            <div class="flow-subtitle">API tests</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-row">
+                    <div class="flow-box large purple">
+                        <span class="flow-icon">📦</span>
+                        <div class="flow-title">Build & Package</div>
+                        <div class="flow-subtitle">Docker images, APK/IPA builds</div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-layer">
+                    <div class="flow-layer-title">Deployment</div>
+                    <div class="flow-row">
+                        <div class="flow-box green">
+                            <div class="flow-title">Backend API</div>
+                            <div class="flow-subtitle">Render.com</div>
+                        </div>
+                        <div class="flow-box orange">
+                            <div class="flow-title">Admin Dashboard</div>
+                            <div class="flow-subtitle">Vercel</div>
+                        </div>
+                        <div class="flow-box pink">
+                            <div class="flow-title">Mobile Apps</div>
+                            <div class="flow-subtitle">Firebase Distribution</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-row">
+                    <div class="flow-box large">
+                        <span class="flow-icon">✅</span>
+                        <div class="flow-title">Production Live</div>
+                        <div class="flow-subtitle">Monitoring & Alerts Active</div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- 5-Month Timeline -->
-        <div class="section">
-            <h2 class="section-title">📅 5-Month Development Timeline</h2>
+        <!-- Development Timeline -->
+        <section class="section">
+            <h2 class="section-title">5-Month Development Timeline</h2>
+
             <div class="timeline">
-                <!-- Month 1 -->
-                <div class="month-card" style="border-color: var(--success);">
-                    <div class="month-title">Month 1: Foundation & Setup</div>
-                    <strong style="color: var(--success);">Team: Backend (2) + Mobile (2) + DevOps (1)</strong>
-                    <ul class="deliverables">
-                        <li><strong>Backend:</strong> FastAPI project structure, auth endpoints, PostgreSQL schema</li>
-                        <li><strong>Mobile:</strong> Flutter monorepo setup, shared components, routing</li>
-                        <li><strong>DevOps:</strong> GitHub Actions, Render + Vercel setup, Neon DB provisioning</li>
-                        <li><strong>Database:</strong> Multi-tenant schema with RLS, user/org tables</li>
-                        <li><strong>Auth:</strong> Supabase Auth integration (email/password, OAuth)</li>
-                        <li><strong>Infra:</strong> All free tier services configured</li>
-                    </ul>
-                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <strong>Key Milestone:</strong> Working auth flow (signup, login) on mobile + API
+                <div class="timeline-item">
+                    <div class="timeline-marker">1</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Month 1: Foundation & Setup</div>
+                        <div class="timeline-subtitle">Infrastructure, Authentication, Database Design</div>
+                        <div class="deliverables-grid">
+                            <div class="deliverable-item">
+                                <strong>Backend Setup</strong>
+                                FastAPI project structure, authentication endpoints, PostgreSQL schema
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Mobile Setup</strong>
+                                Flutter monorepo, shared components, routing configuration
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>DevOps</strong>
+                                GitHub Actions workflows, deployment pipelines, environment configs
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Database</strong>
+                                Multi-tenant schema with RLS, user/org tables, migrations
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Authentication</strong>
+                                Supabase Auth integration, JWT handling, OAuth setup
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Infrastructure</strong>
+                                Neon DB, Redis Upstash, Cloudinary, Firebase setup
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Month 2 -->
-                <div class="month-card" style="border-color: var(--accent);">
-                    <div class="month-title">Month 2: Core Features</div>
-                    <strong style="color: var(--accent);">Team: Backend (2) + Mobile (2) + QA (1)</strong>
-                    <ul class="deliverables">
-                        <li><strong>Products:</strong> Catalog API, search/filter, product CRUD</li>
-                        <li><strong>Orders:</strong> Cart management, checkout flow, order creation</li>
-                        <li><strong>Mobile UI:</strong> Product listing, detail pages, cart, checkout screens</li>
-                        <li><strong>Image Upload:</strong> Cloudinary integration for product images</li>
-                        <li><strong>Multi-org:</strong> Vendor selection, organization switching</li>
-                        <li><strong>Testing:</strong> Unit tests (pytest, flutter test), API integration tests</li>
-                    </ul>
-                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <strong>Key Milestone:</strong> End-to-end order placement (test mode)
+                <div class="timeline-item">
+                    <div class="timeline-marker">2</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Month 2: Core E-commerce Features</div>
+                        <div class="timeline-subtitle">Products, Orders, Shopping Cart, Payments</div>
+                        <div class="deliverables-grid">
+                            <div class="deliverable-item">
+                                <strong>Product Service</strong>
+                                Catalog API, search/filter, category management, CRUD operations
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Order Service</strong>
+                                Cart management, checkout flow, order creation, history
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Mobile UI</strong>
+                                Product listing, detail pages, cart screens, checkout flow
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Image Upload</strong>
+                                Cloudinary integration, image optimization, CDN delivery
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Multi-org</strong>
+                                Vendor selection, organization switching, data isolation
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Testing</strong>
+                                Unit tests (pytest, flutter test), API integration tests
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Month 3 -->
-                <div class="month-card" style="border-color: var(--purple);">
-                    <div class="month-title">Month 3: Delivery & Real-time</div>
-                    <strong style="color: var(--purple);">Team: Backend (2) + Mobile (2) + QA (1)</strong>
-                    <ul class="deliverables">
-                        <li><strong>Delivery Agent App:</strong> Order assignment, navigation, status updates</li>
-                        <li><strong>GPS Tracking:</strong> Real-time location updates (WebSocket/polling)</li>
-                        <li><strong>Maps:</strong> OpenStreetMap + Leaflet integration, route display</li>
-                        <li><strong>Push Notifications:</strong> Firebase FCM for order updates</li>
-                        <li><strong>Status Management:</strong> Order lifecycle (pending → delivered)</li>
-                        <li><strong>Basic Routing:</strong> Simple distance-based agent assignment</li>
-                    </ul>
-                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <strong>Key Milestone:</strong> Complete delivery workflow (assignment → tracking → completion)
+                <div class="timeline-item">
+                    <div class="timeline-marker">3</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Month 3: Delivery & Real-time Features</div>
+                        <div class="timeline-subtitle">Agent App, GPS Tracking, Route Optimization</div>
+                        <div class="deliverables-grid">
+                            <div class="deliverable-item">
+                                <strong>Agent App</strong>
+                                Order assignment UI, navigation screens, status updates
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>GPS Tracking</strong>
+                                Real-time location updates, WebSocket connections, polling
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Maps Integration</strong>
+                                OpenStreetMap + Leaflet, route display, navigation
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Push Notifications</strong>
+                                Firebase FCM setup, order status updates, delivery alerts
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Order Lifecycle</strong>
+                                Status management (pending → delivered), state transitions
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Route Optimization</strong>
+                                Neo4j GDS integration, distance-based agent assignment
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Month 4 -->
-                <div class="month-card" style="border-color: var(--warning);">
-                    <div class="month-title">Month 4: Admin & Payments</div>
-                    <strong style="color: var(--warning);">Team: Backend (2) + Frontend (1) + Mobile (1) + QA
-                        (1)</strong>
-                    <ul class="deliverables">
-                        <li><strong>Admin Dashboard:</strong> Next.js dashboard (Vercel), analytics, reporting</li>
-                        <li><strong>Payments:</strong> Stripe Test Mode integration, webhook handling</li>
-                        <li><strong>Multi-currency:</strong> USD/INR support (placeholder for Razorpay)</li>
-                        <li><strong>Vendor Portal:</strong> Product management, order fulfillment</li>
-                        <li><strong>Analytics:</strong> Mixpanel/PostHog event tracking</li>
-                        <li><strong>Performance:</strong> Redis caching, API optimization</li>
-                    </ul>
-                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <strong>Key Milestone:</strong> Full payment flow + admin management
+                <div class="timeline-item">
+                    <div class="timeline-marker">4</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Month 4: Admin Dashboard & Payments</div>
+                        <div class="timeline-subtitle">Management Portal, Payment Processing, Analytics</div>
+                        <div class="deliverables-grid">
+                            <div class="deliverable-item">
+                                <strong>Admin Dashboard</strong>
+                                Next.js dashboard, real-time analytics, reporting
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Payments</strong>
+                                Stripe integration, webhook handling, refund processing
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Multi-currency</strong>
+                                USD/INR support, Razorpay integration (India)
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Vendor Portal</strong>
+                                Product management, order fulfillment, inventory tracking
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Analytics</strong>
+                                Mixpanel/PostHog integration, event tracking, dashboards
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Performance</strong>
+                                Redis caching, query optimization, API improvements
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Month 5 -->
-                <div class="month-card" style="border-color: var(--pink);">
-                    <div class="month-title">Month 5: Polish & Launch Prep</div>
-                    <strong style="color: var(--pink);">Full Team: 7-8 Members</strong>
-                    <ul class="deliverables">
-                        <li><strong>UI/UX Polish:</strong> Market-specific designs (US/India), animations</li>
-                        <li><strong>Testing:</strong> End-to-end testing, load testing, bug fixes</li>
-                        <li><strong>Monitoring:</strong> Better Stack / Sentry error tracking, uptime monitoring</li>
-                        <li><strong>Documentation:</strong> API docs, deployment guide, user manual</li>
-                        <li><strong>Security:</strong> Penetration testing, OWASP Top 10 compliance</li>
-                        <li><strong>App Store:</strong> iOS App Store + Google Play submission</li>
-                        <li><strong>Production Ready:</strong> Database backups, disaster recovery plan</li>
-                    </ul>
-                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <strong>Key Milestone:</strong> PRODUCTION LAUNCH 🚀
+                <div class="timeline-item">
+                    <div class="timeline-marker">5</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Month 5: Polish & Launch Preparation</div>
+                        <div class="timeline-subtitle">Testing, Security, App Store Submission</div>
+                        <div class="deliverables-grid">
+                            <div class="deliverable-item">
+                                <strong>UI/UX Polish</strong>
+                                Market-specific designs (US/India), animations, transitions
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Testing</strong>
+                                E2E testing, load testing, bug fixes, regression testing
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Monitoring</strong>
+                                Sentry error tracking, Better Stack uptime, alerting
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Documentation</strong>
+                                API docs, deployment guide, user manual, runbooks
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>Security</strong>
+                                Penetration testing, OWASP compliance, vulnerability fixes
+                            </div>
+                            <div class="deliverable-item">
+                                <strong>App Store</strong>
+                                iOS App Store + Google Play submission and review
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Frontend Architecture -->
-        <div class="section">
-            <h2 class="section-title">📱 Frontend Architecture (Flutter)</h2>
-            <div class="diagram">
-                <pre>
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                          FLUTTER MONOREPO STRUCTURE                             │
-└─────────────────────────────────────────────────────────────────────────────────┘
+        <!-- Data Flow -->
+        <section class="section">
+            <h2 class="section-title">Key Data Flows</h2>
 
-meat_delivery_app/
-├── lib/
-│   ├── main_customer.dart          # Customer app entry point
-│   ├── main_agent.dart              # Delivery agent app entry point
-│   │
-│   ├── core/                        # 🔵 90% SHARED CODE
-│   │   ├── config/
-│   │   │   ├── app_config.dart      # Environment configs (dev/prod)
-│   │   │   ├── flavor_config.dart   # Customer vs Agent flavor
-│   │   │   └── theme/
-│   │   │       ├── light_theme.dart
-│   │   │       ├── dark_theme.dart
-│   │   │       └── locale_themes.dart  # US vs India themes
-│   │   │
-│   │   ├── network/
-│   │   │   ├── api_client.dart      # HTTP client (dio)
-│   │   │   ├── interceptors.dart    # Auth, logging
-│   │   │   └── websocket_client.dart # Real-time updates
-│   │   │
-│   │   ├── models/
-│   │   │   ├── user.dart
-│   │   │   ├── product.dart
-│   │   │   ├── order.dart
-│   │   │   ├── delivery.dart
-│   │   │   └── organization.dart
-│   │   │
-│   │   ├── services/
-│   │   │   ├── auth_service.dart    # Supabase Auth
-│   │   │   ├── storage_service.dart # Local storage (hive)
-│   │   │   ├── fcm_service.dart     # Push notifications
-│   │   │   └── location_service.dart # GPS tracking
-│   │   │
-│   │   └── utils/
-│   │       ├── validators.dart
-│   │       ├── formatters.dart      # Currency, date, units
-│   │       └── constants.dart
-│   │
-│   ├── features/                    # 🟢 10% APP-SPECIFIC
-│   │   ├── customer/
-│   │   │   ├── home/
-│   │   │   ├── products/
-│   │   │   ├── cart/
-│   │   │   ├── checkout/
-│   │   │   └── orders/
-│   │   │
-│   │   └── agent/
-│   │       ├── dashboard/
-│   │       ├── deliveries/
-│   │       ├── navigation/
-│   │       └── earnings/
-│   │
-│   └── widgets/                     # Shared UI components
-│       ├── buttons/
-│       ├── cards/
-│       ├── forms/
-│       └── loaders/
-│
-├── android/                         # Android config
-├── ios/                            # iOS config
-├── test/                           # Unit + widget tests
-└── integration_test/               # E2E tests
+            <!-- Order Flow -->
+            <div class="flow-container">
+                <h3 style="text-align: center; color: var(--accent-green); margin-bottom: 2rem; font-size: 1.5rem;">
+                    Order Placement Flow</h3>
 
-STATE MANAGEMENT: Riverpod 2.x
-ROUTING: go_router
-HTTP: dio
-LOCAL DB: hive
-MAPS: flutter_map + OpenStreetMap
-LOCATION: geolocator
-PUSH: firebase_messaging
-</pre>
-            </div>
-        </div>
-
-        <!-- Backend Architecture -->
-        <div class="section">
-            <h2 class="section-title">🔧 Backend Architecture (FastAPI)</h2>
-            <div class="diagram">
-                <pre>
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           FASTAPI PROJECT STRUCTURE                             │
-└─────────────────────────────────────────────────────────────────────────────────┘
-
-backend/
-├── app/
-│   ├── main.py                      # FastAPI app initialization
-│   ├── config.py                    # Environment variables
-│   │
-│   ├── api/                         # API Routes
-│   │   ├── v1/
-│   │   │   ├── __init__.py
-│   │   │   ├── auth.py             # POST /auth/signup, /auth/login
-│   │   │   ├── users.py            # GET/PUT /users/{id}
-│   │   │   ├── organizations.py    # Multi-tenant org management
-│   │   │   ├── products.py         # CRUD + search/filter
-│   │   │   ├── orders.py           # Order lifecycle
-│   │   │   ├── deliveries.py       # Agent assignment, tracking
-│   │   │   ├── payments.py         # Stripe webhooks
-│   │   │   └── analytics.py        # Dashboard metrics
-│   │   │
-│   │   └── dependencies.py          # Auth, DB session dependencies
-│   │
-│   ├── models/                      # SQLAlchemy ORM Models
-│   │   ├── user.py
-│   │   ├── organization.py
-│   │   ├── product.py
-│   │   ├── order.py
-│   │   ├── delivery.py
-│   │   └── payment.py
-│   │
-│   ├── schemas/                     # Pydantic Request/Response
-│   │   ├── user.py
-│   │   ├── product.py
-│   │   └── order.py
-│   │
-│   ├── services/                    # Business Logic
-│   │   ├── auth_service.py         # JWT, Supabase integration
-│   │   ├── order_service.py        # Order processing
-│   │   ├── delivery_service.py     # Agent assignment algorithm
-│   │   ├── payment_service.py      # Stripe integration
-│   │   ├── notification_service.py # FCM push
-│   │   └── cache_service.py        # Redis caching
-│   │
-│   ├── database/
-│   │   ├── session.py              # SQLAlchemy session
-│   │   ├── base.py                 # Base model
-│   │   └── migrations/             # Alembic migrations
-│   │
-│   ├── middleware/
-│   │   ├── auth.py                 # JWT verification
-│   │   ├── rate_limit.py           # Rate limiting
-│   │   └── logging.py              # Request/response logging
-│   │
-│   └── utils/
-│       ├── security.py             # Password hashing, tokens
-│       ├── email.py                # Email notifications
-│       └── validators.py
-│
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── conftest.py
-│
-├── requirements.txt
-├── Dockerfile
-└── render.yaml                      # Render.com deployment config
-
-TECH STACK:
-- FastAPI 0.104+
-- SQLAlchemy 2.x (async)
-- Alembic (migrations)
-- Pydantic v2
-- asyncpg (PostgreSQL)
-- redis-py (Upstash)
-- stripe-python
-- python-jose (JWT)
-- httpx (async HTTP)
-</pre>
-            </div>
-        </div>
-
-        <!-- Database Schema -->
-        <div class="section">
-            <h2 class="section-title">🗄️ Database Schema (PostgreSQL)</h2>
-            <div class="diagram">
-                <pre>
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                         MULTI-TENANT DATABASE SCHEMA                         │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────┐
-│   organizations     │  ← Root tenant entity
-├─────────────────────┤
-│ id (UUID, PK)       │
-│ name                │
-│ type (vendor/admin) │
-│ country (US/IN)     │
-│ currency (USD/INR)  │
-│ settings (JSONB)    │
-│ created_at          │
-└──────────┬──────────┘
-           │ 1
-           │
-           │ N
-┌──────────┴──────────┐
-│       users         │  ← All user types
-├─────────────────────┤
-│ id (UUID, PK)       │
-│ org_id (FK)         │  ← RLS: WHERE org_id = current_org_id()
-│ email               │
-│ role (customer/     │
-│      agent/admin)   │
-│ phone               │
-│ location (POINT)    │
-│ created_at          │
-└──────────┬──────────┘
-           │ 1
-           │
-           │ N
-┌──────────┴──────────┐       ┌──────────────────┐
-│      products       │       │      orders      │
-├─────────────────────┤       ├──────────────────┤
-│ id (UUID, PK)       │   ┌──→│ id (UUID, PK)    │
-│ org_id (FK)         │   │   │ org_id (FK)      │
-│ name                │   │   │ customer_id (FK) │
-│ description         │   │   │ total            │
-│ price (DECIMAL)     │   │   │ currency         │
-│ unit (kg/lbs)       │   │   │ status (enum)    │
-│ images (JSONB)      │   │   │ delivery_address │
-│ category            │   │   │ created_at       │
-│ in_stock (BOOLEAN)  │   │   └──────┬───────────┘
-│ created_at          │   │          │ 1
-└─────────────────────┘   │          │
-                          │          │ N
-┌─────────────────────┐   │   ┌──────┴───────────┐
-│    order_items      │   │   │    deliveries    │
-├─────────────────────┤   │   ├──────────────────┤
-│ id (UUID, PK)       │   │   │ id (UUID, PK)    │
-│ order_id (FK)       │───┘   │ order_id (FK)    │
-│ product_id (FK)     │───────→│ agent_id (FK)    │
-│ quantity            │       │ status (enum)    │
-│ unit_price          │       │ pickup_location  │
-│ subtotal            │       │ dropoff_location │
-└─────────────────────┘       │ distance_km      │
-                              │ assigned_at      │
-                              │ completed_at     │
-                              └──────────────────┘
-
-┌─────────────────────┐
-│      payments       │
-├─────────────────────┤
-│ id (UUID, PK)       │
-│ order_id (FK)       │
-│ stripe_id           │
-│ amount              │
-│ currency            │
-│ status              │
-│ metadata (JSONB)    │
-│ created_at          │
-└─────────────────────┘
-
-ROW-LEVEL SECURITY (RLS):
-- Enable RLS on all tenant-scoped tables
-- Policies: WHERE org_id = current_setting('app.current_org_id')::UUID
-- Set org_id in connection: SET app.current_org_id = '<org_uuid>'
-</pre>
-            </div>
-        </div>
-
-        <!-- Deployment Flow -->
-        <div class="section">
-            <h2 class="section-title">🚀 Deployment Flow</h2>
-            <div class="diagram">
-                <pre>
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                        CODE TO PRODUCTION FLOW                               │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-DEVELOPER
-    │
-    │ (git push to feature branch)
-    ▼
-┌──────────────────────┐
-│  GITHUB PR CREATED   │  → Triggers PR checks
-├──────────────────────┤
-│ • Run linters        │
-│ • Run tests          │
-│ • Code coverage      │
-│ • Security scan      │
-└──────┬───────────────┘
-       │
-       │ (PR approved & merged to develop)
-       ▼
-┌──────────────────────┐
-│  DEVELOP BRANCH      │  → Auto-deploy to STAGING
-├──────────────────────┤
-│ • Run full test      │
-│ • Build & deploy     │
-│ • Staging URL live   │
-└──────┬───────────────┘
-       │
-       │ (QA approval, merge develop → main)
-       ▼
-┌──────────────────────┐
-│   MAIN BRANCH        │  → Auto-deploy to PRODUCTION
-├──────────────────────┤
-│ • Build production   │
-│ • Run smoke tests    │
-│ • Deploy live        │
-│ • Create git tag     │
-└──────┬───────────────┘
-       │
-       ▼
-┌─────────────────────────────────────────────────────────┐
-│              PRODUCTION ENVIRONMENT                     │
-├─────────────────────────────────────────────────────────┤
-│  BACKEND       →  https://api.meatdelivery.com         │
-│  (Render.com)      • Auto-deploy from main branch      │
-│                    • 750 hrs/month free                 │
-│                    • Health check: /health              │
-│                                                         │
-│  FRONTEND      →  https://admin.meatdelivery.com       │
-│  (Vercel)          • Auto-deploy from main branch      │
-│                    • Edge network (global CDN)         │
-│                    • Serverless functions              │
-│                                                         │
-│  MOBILE        →  Firebase App Distribution            │
-│  (Flutter)         • Beta testing via email invite     │
-│                    • Later: App Store + Play Store     │
-└─────────────────────────────────────────────────────────┘
-
-MONITORING & ROLLBACK:
-┌──────────────────────┐
-│  Better Stack        │  → Uptime monitoring, alerts
-│  Sentry              │  → Error tracking
-│  Mixpanel            │  → User analytics
-└──────────────────────┘
-
-If production issues detected:
-  1. GitHub → Revert commit
-  2. Auto-deploy triggers (30-90 seconds)
-  3. Previous version restored
-</pre>
-            </div>
-        </div>
-
-        <!-- Summary -->
-        <div class="section"
-            style="background: linear-gradient(135deg, rgba(81, 207, 102, 0.2) 0%, rgba(47, 158, 68, 0.1) 100%); border-color: var(--success);">
-            <h2 class="section-title">✅ Summary: Why This Plan Works</h2>
-            <div
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
-                <div>
-                    <h3 style="color: var(--success); margin-bottom: 1rem;">💰 Zero Cost</h3>
-                    <p>Every service is on free tier. Perfect for 5-month development + early launch (up to 5-10K
-                        orders/month).</p>
+                <div class="flow-row">
+                    <div class="flow-box green">
+                        <div class="flow-title">1. Customer Browses</div>
+                        <div class="flow-subtitle">Product catalog</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box green">
+                        <div class="flow-title">2. Adds to Cart</div>
+                        <div class="flow-subtitle">Shopping cart</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box green">
+                        <div class="flow-title">3. Checkout</div>
+                        <div class="flow-subtitle">Payment details</div>
+                    </div>
                 </div>
-                <div>
-                    <h3 style="color: var(--accent); margin-bottom: 1rem;">🚀 Production Ready</h3>
-                    <p>This isn't a toy stack. Neon, Render, Vercel are used by thousands of production startups.</p>
-                </div>
-                <div>
-                    <h3 style="color: var(--purple); margin-bottom: 1rem;">📈 Scalable</h3>
-                    <p>Easy upgrade path: Render → Cloud Run, Neon → Scale tier. No rewrite needed.</p>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-row">
+                    <div class="flow-box purple">
+                        <div class="flow-title">4. Payment Processing</div>
+                        <div class="flow-subtitle">Stripe/Razorpay</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box purple">
+                        <div class="flow-title">5. Order Created</div>
+                        <div class="flow-subtitle">Database entry</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box purple">
+                        <div class="flow-title">6. Notification</div>
+                        <div class="flow-subtitle">Push to customer</div>
+                    </div>
                 </div>
             </div>
-            <div
-                style="margin-top: 2rem; padding: 2rem; background: rgba(0,0,0,0.3); border-radius: 12px; text-align: center;">
-                <h3 style="color: var(--success); font-size: 2rem; margin-bottom: 1rem;">After 5 Months:</h3>
-                <p style="font-size: 1.2rem; line-height: 1.8;">
-                    ✅ 2 Mobile Apps (iOS + Android) in App Stores<br>
-                    ✅ Admin Dashboard Live<br>
-                    ✅ Backend API with 99%+ uptime<br>
-                    ✅ Multi-tenant platform ready<br>
-                    ✅ CI/CD fully automated<br>
-                    ✅ <strong>Total Infrastructure Cost: $0</strong>
-                </p>
+
+            <!-- Delivery Flow -->
+            <div class="flow-container">
+                <h3 style="text-align: center; color: var(--accent-orange); margin-bottom: 2rem; font-size: 1.5rem;">
+                    Delivery Assignment Flow</h3>
+
+                <div class="flow-row">
+                    <div class="flow-box orange">
+                        <div class="flow-title">1. Order Ready</div>
+                        <div class="flow-subtitle">Vendor confirms</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box orange">
+                        <div class="flow-title">2. Find Agents</div>
+                        <div class="flow-subtitle">Nearby & available</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box orange">
+                        <div class="flow-title">3. Route Optimization</div>
+                        <div class="flow-subtitle">Neo4j algorithm</div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-row">
+                    <div class="flow-box pink">
+                        <div class="flow-title">4. Assign Agent</div>
+                        <div class="flow-subtitle">Best match selected</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box pink">
+                        <div class="flow-title">5. Agent Accepts</div>
+                        <div class="flow-subtitle">Confirmation</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box pink">
+                        <div class="flow-title">6. Real-time Tracking</div>
+                        <div class="flow-subtitle">GPS updates</div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow-down">↓</div>
+
+                <div class="flow-row">
+                    <div class="flow-box">
+                        <div class="flow-title">7. Delivery Complete</div>
+                        <div class="flow-subtitle">Photo proof & signature</div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
+
     </div>
+
+    <footer
+        style="background: var(--bg-secondary); padding: 3rem 0; margin-top: 4rem; border-top: 2px solid var(--border);">
+        <div class="container" style="text-align: center; color: var(--text-secondary);">
+            <p>Multi-Org Meat Delivery Platform • 5-Month Development Plan</p>
+            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Complete Technical Architecture & Development Flow</p>
+        </div>
+    </footer>
 </body>
 
 </html>
